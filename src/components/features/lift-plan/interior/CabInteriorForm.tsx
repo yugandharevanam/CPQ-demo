@@ -10,13 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import parse from 'html-react-parser';
 import { calculateCompleteTotalPrice, formatIndianNumber } from '../../../../utils/priceCalculator';
