@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import { SearchIcon, CheckCircleIcon, UserIcon, MailIcon, PhoneIcon, BuildingIcon, MapPinIcon, XIcon, FileTextIcon } from 'lucide-react';
 import { CustomerInfo } from '../../../../types';
 import { MockCustomerService as CustomerService } from '../../../../mocks/MockCustomerService';
-import type { CustomerSuggestion } from '../../../../mocks/MockCustomerService';
+import type { CustomerSuggestion } from '../../../../services/customer/CustomerService';
 import { useDebounce } from '../../../../hooks/core/useDebounce';
 import { validateCityMapping } from '../../../../utils/addressLogger';
 import { getCustomerTypeFromGSTIN, getEntityTypeFromGSTIN } from '../../../../utils/gstinUtils';
