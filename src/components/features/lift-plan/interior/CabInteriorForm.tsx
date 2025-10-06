@@ -355,32 +355,7 @@ const CabInteriorForm = ({
           </div>
 
       {/* Additional Interior Options - Below Overall Section */}
-      <div className="mt-8 p-4 sm:p-6 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-black">
-        <h3 className="text-lg sm:text-xl font-medium mb-4 text-gray-900 dark:text-white">
-          Additional Interior Options
-        </h3>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {/* Cabin False Ceiling */}
-          <div>
-            <label className="text-sm sm:text-base mb-2 block text-gray-700 dark:text-gray-300 font-medium">
-              Cabin False Ceiling
-            </label>
-            <Select value={cabinFalseCeiling} onValueChange={setCabinFalseCeiling}>
-              <SelectTrigger className="h-10 text-sm">
-                <SelectValue placeholder="Select cabin false ceiling" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="FC01">FC01</SelectItem>
-                <SelectItem value="FC02">FC02</SelectItem>
-                <SelectItem value="FC03">FC03</SelectItem>
-                <SelectItem value="FC04">FC04</SelectItem>
-                <SelectItem value="FC05">FC05</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
+
 
       {/* Order Summary & Navigation - Mobile First Design */}
       <div className="mt-8 space-y-4">
