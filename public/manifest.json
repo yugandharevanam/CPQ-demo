@@ -1,0 +1,95 @@
+{
+  "name": "Evanam CPQ Demo",
+  "short_name": "CPQ",
+  "description": "Configure Price Quote application for elevator and lift solutions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#EC363A",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/el-logo-sm.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Quotation",
+      "short_name": "New Quote",
+      "description": "Create a new quotation",
+      "url": "/lift-plan",
+      "icons": [
+        {
+          "src": "/el-logo-sm.png",
+          "sizes": "48x48"
+        }
+      ]
+    },
+    {
+      "name": "View Quotations",
+      "short_name": "Quotes",
+      "description": "View existing quotations",
+      "url": "/quotations",
+      "icons": [
+        {
+          "src": "/el-logo-sm.png",
+          "sizes": "48x48"
+        }
+      ]
+    }
+  ]
+} 

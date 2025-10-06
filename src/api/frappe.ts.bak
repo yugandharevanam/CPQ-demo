@@ -1,0 +1,244 @@
+import axiosInstance from './axiosInstance';
+import { endpoints } from './endpoints';
+import { CustomerInfo } from '../types';
+
+// Define response types for better type safety
+interface FrappeListResponse<T> {
+  data: T[];
+}
+
+interface FrappeDocResponse<T> {
+  data: T;
+}
+
+// Define the Frappe Customer type
+export interface FrappeCustomer {
+  name: string;
+  customer_name: string;
+  customer_type: string;
+  email_id?: string;
+  mobile_no?: string;
+  address_line1?: string;
+  address_line2?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  pincode?: string;
+  gstin?: string;
+}
+
+/**
+ * Main Frappe API service with centralized methods for all Frappe DocTypes
+ */
+export const frappeAPI = {
+  /**
+   * Get a list of documents from a Frappe DocType with optional filters and field selection
+   * 
+   * @param docType The DocType to fetch from (e.g., "Customer", "Item")
+   * @param filters Optional array of filters in Frappe format
+   * @param fields Optional array of fields to return (defaults to all standard fields)
+   * @returns Array of documents matching the criteria
+   */
+  getDocTypeList: async <T>(docType: string, filters: any[] = [], fields: string[] = ['*']) => {
+    const params = new URLSearchParams();
+
+    if (filters && filters.length > 0) {
+      // Convert filters to the format Frappe expects
+      params.append('filters', JSON.stringify(filters));
+    }
+
+    if (fields && fields.length > 0) {
+      // Only request the fields we need - better performance
+      params.append('fields', JSON.stringify(fields));
+    }
+
+    try {
+      const response = await axiosInstance.get<FrappeListResponse<T>>(
+        endpoints.docType.list(docType),
+        { params }
+      );
+
+      // Debug log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`getDocTypeList(${docType}) response:`, response.data);
+      }
+
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error getting ${docType} list:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get a single document from a Frappe DocType by name
+   * 
+   * @param docType The DocType to fetch from (e.g., "Customer", "Item")
+   * @param name The name/ID of the document to fetch
+   * @param fields Optional array of fields to return (defaults to all standard fields)
+   * @returns The requested document
+   */
+  getDocType: async <T>(docType: string, name: string, fields: string[] = ['*']) => {
+    const params = new URLSearchParams();
+
+    if (fields && fields.length > 0 && !fields.includes('*')) {
+      // Only request the fields we need - better performance
+      params.append('fields', JSON.stringify(fields));
+    }
+
+    try {
+      const response = await axiosInstance.get<FrappeDocResponse<T>>(
+        endpoints.docType.get(docType, name),
+        { params }
+      );
+
+      // Debug log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`getDocType(${docType}, ${name}) response:`, response.data);
+      }
+
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error getting ${docType} document ${name}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Create a new document in a Frappe DocType
+   * 
+   * @param docType The DocType to create in (e.g., "Customer", "Item")
+   * @param data The data for the new document
+   * @returns The created document
+   */
+  createDocType: async <T>(docType: string, data: any) => {
+    try {
+      const response = await axiosInstance.post<FrappeDocResponse<T>>(
+        endpoints.docType.create(docType),
+        { data }
+      );
+
+      // Debug log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`createDocType(${docType}) response:`, response.data);
+      }
+
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error creating ${docType}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Update an existing document in a Frappe DocType
+   * 
+   * @param docType The DocType to update in (e.g., "Customer", "Item")
+   * @param name The name/ID of the document to update
+   * @param data The updated data
+   * @returns The updated document
+   */
+  updateDocType: async <T>(docType: string, name: string, data: any) => {
+    try {
+      const response = await axiosInstance.put<FrappeDocResponse<T>>(
+        endpoints.docType.update(docType, name),
+        { data }
+      );
+
+      // Debug log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`updateDocType(${docType}, ${name}) response:`, response.data);
+      }
+
+      return response.data.data;
+    } catch (error) {
+      console.error(`Error updating ${docType} ${name}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Delete a document from a Frappe DocType
+   * 
+   * @param docType The DocType to delete from (e.g., "Customer", "Item")
+   * @param name The name/ID of the document to delete
+   * @returns True if successful
+   */
+  deleteDocType: async (docType: string, name: string) => {
+    try {
+      await axiosInstance.delete(endpoints.docType.delete(docType, name));
+      return true;
+    } catch (error) {
+      console.error(`Error deleting ${docType} ${name}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Customer-specific methods
+   */
+  customer: {
+    /**
+     * Search for customers by various criteria
+     * 
+     * @param field The field to search by: email_id, mobile_no, gstin, or customer_name
+     * @param value The value to search for
+     * @returns Array of matching customers or null if none found
+     */
+    search: async (field: 'email_id' | 'mobile_no' | 'gstin' | 'customer_name', value: string): Promise<FrappeCustomer[] | null> => {
+      // Define filter
+      let filters: any[] = [["Customer", field, "=", value]];
+
+      // Define fields to fetch - include all fields we need for customer info
+      const fields = ["*"];
+
+      try {
+        const customers = await frappeAPI.getDocTypeList<FrappeCustomer>('Customer', filters, fields);
+        console.log(customers)
+        return customers.length > 0 ? customers : null;
+      } catch (error) {
+        console.error(`Error searching customer by ${field}:`, error);
+        return null;
+      }
+    },
+
+    /**
+     * Create a new customer
+     * 
+     * @param customerData The customer data
+     * @returns ID of the created customer
+     */
+    create: async (customerData: any): Promise<string> => {
+      try {
+        const result = await frappeAPI.createDocType<{ name: string }>('Customer', customerData);
+        return result.name;
+      } catch (error) {
+        console.error('Error creating customer:', error);
+        throw error;
+      }
+    }
+  },
+
+  /**
+   * Address-specific methods
+   */
+  address: {
+    /**
+     * Create a new address
+     * 
+     * @param addressData The address data
+     * @returns ID of the created address
+     */
+    create: async (addressData: any): Promise<string> => {
+      try {
+        const result = await frappeAPI.createDocType<{ name: string }>('Address', addressData);
+        return result.name;
+      } catch (error) {
+        console.error('Error creating address:', error);
+        throw error;
+      }
+    }
+  }
+};
+
+export default frappeAPI;

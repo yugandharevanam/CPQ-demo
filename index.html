@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/el-logo-sm.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evanam CPQ Demo</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="48x48" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="96x96" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="128x128" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/el-logo-sm.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/el-logo-sm.png" />
+    
+    <!-- Meta tags for mobile app -->
+    <meta name="theme-color" content="#EC363A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="CPQ" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="CPQ" />
+    <meta name="msapplication-TileColor" content="#EC363A" />
+    <meta name="msapplication-TileImage" content="/el-logo-sm.png" />
+    
+    <!-- Description -->
+    <meta name="description" content="Configure Price Quote application for elevator and lift solutions" />
+    <meta name="keywords" content="CPQ, elevator, lift, quotation, pricing, configuration" />
+    <meta name="author" content="Evanam" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Unregister any service workers during development to avoid caching/HMR issues
+      if (location.hostname === 'localhost' && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          regs.forEach((r) => r.unregister());
+        }).catch(() => {});
+      }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

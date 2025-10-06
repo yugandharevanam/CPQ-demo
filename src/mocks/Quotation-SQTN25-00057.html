@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quotation {{QUOTATION_NO}}</title>
+  <style>
+    /* --- Reset & Base --- */
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      color: #111827;
+      background: #f8fafc;
+      line-height: 1.45;
+    }
+    /* --- Page --- */
+    .page {
+      width: 210mm;              /* A4 width */
+      min-height: 297mm;         /* A4 height */
+      margin: 16px auto;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+      padding: 24mm 18mm 20mm 18mm;
+      position: relative;
+    }
+    @media print {
+      body { background: #fff; }
+      .page {
+        margin: 0; box-shadow: none; width: auto; min-height: auto;
+        padding: 18mm 14mm;
+      }
+      .no-print { display: none !important; }
+      @page {
+        size: A4;
+        margin: 14mm;
+      }
+    }
+    /* --- Header --- */
+    .header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 12px;
+    }
+    .brand h1 {
+      font-size: 22px;
+      margin: 0 0 4px 0;
+      letter-spacing: .2px;
+    }
+    .brand .tag {
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .doc-meta {
+      text-align: right;
+      font-size: 12px;
+      color: #374151;
+    }
+    .doc-meta .doc-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .doc-meta div { margin: 2px 0; }
+    .muted { color: #6b7280; }
+    /* --- Blocks --- */
+    .block {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .block h2 {
+      font-size: 14px;
+      margin: 0 0 10px 0;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      color: #111827;
+    }
+    .subtle {
+      background: #f9fafb;
+      border-color: #eef2f7;
+    }
+    /* --- Two columns --- */
+    .cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    /* --- Key/value --- */
+    .kv {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 8px 12px;
+      font-size: 13px;
+    }
+    .kv div.key { color: #6b7280; }
+    .kv div.val { color: #111827; }
+    /* --- Tables --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      background: #f3f4f6;
+      color: #111827;
+      font-weight: 700;
+      text-align: left;
+      padding: 10px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    tbody td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+    .num { text-align: right; }
+    .center { text-align: center; }
+    .small { font-size: 12px; }
+    /* --- Footer --- */
+    .footer {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #6b7280;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .address { white-space: pre-line; }
+    /* --- Totals --- */
+    .totals {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: start;
+    }
+    .totals .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      background: #fafafa;
+    }
+    .totals .card .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    .totals .card .row:last-child { border-bottom: none; }
+    .grand { font-weight: 800; font-size: 16px; }
+    .inwords { font-style: italic; color: #4b5563; }
+    /* --- Pill --- */
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      background: #f9fafb;
+      color: #374151;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Evanam Letterhead -->
+    <img src="/src/Assets/Evanam demo letter head.png" alt="Evanam Letterhead" style="width:100%; height:auto; margin: -10mm -10mm 10mm -10mm; display:block;" />
+    <!-- Header -->
+    <div class="header">
+
+      <div class="doc-meta">
+        <div class="doc-title">Quotation</div>
+        <div><strong>No:</strong> {{QUOTATION_NO}}</div>
+        <div><strong>Date:</strong> {{OFFER_DATE}}</div>
+      </div>
+    </div>
+
+    <!-- Offer / Contact -->
+    <div class="block subtle">
+      <div class="cols">
+        <div>
+          <div class="kv">
+            <div class="key">Offer for</div><div class="val"><strong>{{OFFER_FOR}}</strong></div>
+            <div class="key">Model</div><div class="val">{{MODEL_NAME}}</div>
+            <div class="key">Offer Ref No</div><div class="val">{{QUOTATION_NO}}</div>
+            <div class="key">Offer Date</div><div class="val">{{OFFER_DATE}}</div>
+          </div>
+        </div>
+        <div>
+          <div class="kv">
+            <div class="key">Contact Name</div><div class="val">{{CONTACT_NAME}}</div>
+            <div class="key">Contact Number</div><div class="val">{{CONTACT_PHONE}}</div>
+            <div class="key">Sales Person</div><div class="val">{{SALES_PERSON}}</div>
+            <div class="key">Requested Delivery Date</div><div class="val">{{REQUESTED_DELIVERY_DATE}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1. Product Details -->
+    <div class="block">
+      <h2>1. Product Details <span class="pill">Lift Technical Specifications</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Type</td><td>Passenger Lift</td></tr>
+          <tr><td>1.1</td><td>Building Type</td><td>{{BUILDING_TYPE}}</td></tr>
+          <tr><td>1.2</td><td>Product - Model</td><td>{{MODEL_NAME}}</td></tr>
+          <tr><td>1.3</td><td>Number of Units</td><td>{{NUM_UNITS}}</td></tr>
+          <tr><td>1.4</td><td>Rated Capacity</td><td>{{RATED_CAPACITY}}</td></tr>
+          <tr><td>1.5</td><td>Rated Speed (m/s)</td><td>{{RATED_SPEED}}</td></tr>
+          <tr><td>1.6</td><td>Floor Designation</td><td>{{FLOOR_DESIGNATION}}</td></tr>
+          <tr><td>1.7</td><td>Stops/Openings</td><td>{{STOPS}}</td></tr>
+          <tr><td>1.8</td><td>Access Sides</td><td>{{ACCESS_SIDES}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. Machine and Controller Details -->
+    <div class="block">
+      <h2>2. Machine and Controller Details <span class="pill">Machine &amp; Controller Specifications</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2.1</td><td>Machine Location</td><td>Directly Above The Lift well</td></tr>
+          <tr><td>2.2</td><td>Drive System</td><td>Micro Processor Based VVVF – Closed loop</td></tr>
+          <tr><td>2.3</td><td>Control System</td><td>Microprocessor Based Full/Down Collective Control</td></tr>
+          <tr><td>2.4</td><td>Main Power Supply</td><td>415 VOLTS, 3 PHASE, 50 CYCLES</td></tr>
+          <tr><td>2.5</td><td>Light Power Supply</td><td>230 VOLTS, 50 CYCLES, SINGLE PHASE</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 3. Dimensions -->
+    <div class="block">
+      <h2>3. Dimensions <span class="pill">Lift Dimensional Details</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>3.1</td><td>Available Shaft (W × D) in mm<br><span class="muted small">After plastering</span></td><td></td></tr>
+          <tr><td>3.2</td><td>Car / Cabin (W × D × H)</td><td></td></tr>
+          <tr><td>3.3</td><td>Type of Door</td><td>Automatic</td></tr>
+          <tr><td>3.4</td><td>Door Opening Style</td><td>Side Opening</td></tr>
+          <tr><td>3.5</td><td>Overhead (mm)</td><td></td></tr>
+          <tr><td>3.6</td><td>Pit Depth (mm)</td><td></td></tr>
+          <tr><td>3.7</td><td>Floor Height (ft)</td><td></td></tr>
+          <tr><td>3.8</td><td>Travel Distance (ft)</td><td></td></tr>
+          <tr><td>3.9</td><td>Cabin Width (mm)</td><td></td></tr>
+          <tr><td>3.10</td><td>Cabin Depth (mm)</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. Door Finish Details -->
+    <div class="block">
+      <h2>4. Door Finish Details</h2>
+      <table>
+        <thead>
+          <tr><th style="width:120px;">S.No</th><th>Specification</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>4.1</td><td>Car &amp; Landing Door</td><td>{{DOOR_FINISH}}</td></tr>
+          <tr><td>4.2</td><td>Car &amp; Landing Door Finish</td><td>{{DOOR_FINISH}}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5. Cabin Details -->
+    <div class="block">
+      <h2>5. Cabin Details <span class="pill">Interior Cabin Configuration</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>5.1</td><td>Lift Cabin Finish</td><td>{{CABIN_FINISH}}</td></tr>
+          <tr><td>5.2</td><td>Ceiling Finish</td><td>{{CEILING_FINISH}}</td></tr>
+          <tr><td>5.3</td><td>Ceiling Type</td><td>{{CEILING_TYPE}}</td></tr>
+          <tr><td>5.4</td><td>Ceiling Light</td><td>LED Lights - Lux level 300 (STD)</td></tr>
+          <tr><td>5.5</td><td>Fan / Blower</td><td>Radial Fan for Painted/Blower for Stainless Steel</td></tr>
+          <tr><td>5.6</td><td>Flooring</td><td>PVC – 3 mm<br/>Model – Black Button (STD)</td></tr>
+          <tr><td>5.7</td><td>Handrail Type</td><td>None</td></tr>
+          <tr><td>5.8</td><td>Handrail Location</td><td>Rear Side</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6 & 7. Fixtures Details -->
+    <div class="block">
+      <h2>6. Fixtures Details – Operating Panel <span class="pill">Control Interface &amp; Display Features</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>6</td><td>Car Operating Panel</td><td></td></tr>
+          <tr><td>6.1</td><td>Number of COP</td><td>1</td></tr>
+          <tr><td>6.2</td><td>COP Faceplate Finish</td><td>Stainless Steel - Hairline Finish</td></tr>
+          <tr><td>6.3</td><td>Button Model</td><td>Round - Soft Touch Push Buttons</td></tr>
+          <tr><td>6.4</td><td>Car Display</td><td>Dot Matrix Display - Vertical</td></tr>
+          <tr><td>6.5</td><td>Call Register Signal</td><td>Yes</td></tr>
+          <tr><td>6.6</td><td>Floor Annunciator</td><td>Yes</td></tr>
+        </tbody>
+      </table>
+      <div style="height:8px"></div>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>7</td><td>Landing Operating Panel</td><td></td></tr>
+          <tr><td>7.1</td><td>LOP Location</td><td>Landing Display on Wall</td></tr>
+          <tr><td>7.2</td><td>LOP Mounting Type</td><td>Wall Mounting</td></tr>
+          <tr><td>7.3</td><td>LOP Faceplate Material</td><td>Stainless Steel - Hairline Finish</td></tr>
+          <tr><td>7.4</td><td>Landing Display</td><td>G + Stops (As per Spec)</td></tr>
+          <tr><td>7.5</td><td>Call Register Signal</td><td>Yes</td></tr>
+          <tr><td>7.6</td><td>Stainless Steel Braille Button</td><td>Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8. Safety Details -->
+    <div class="block">
+      <h2>8. Safety Details <span class="pill">Protection &amp; Emergency Systems</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:80px;">S.No</th><th>Specification</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>8.1</td><td>Over Speed Governor</td><td>Yes</td></tr>
+          <tr><td>8.2</td><td>Door Protection</td><td>Infra-Red Door Screen</td></tr>
+          <tr><td>8.3</td><td>Over Load Indicator with Annunciator</td><td>Yes</td></tr>
+          <tr><td>8.4</td><td>Fireman Switch</td><td>Yes</td></tr>
+          <tr><td>8.5</td><td>Automatic Rescue Device with Announcement</td><td>Yes</td></tr>
+          <tr><td>8.6</td><td>Battery Operated Emergency Alarm</td><td>Yes</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 9. Elevator Details (Standard Features) -->
+    <div class="block">
+      <h2>9. Elevator Details <span class="pill">Standard Features</span></h2>
+      <table>
+        <thead>
+          <tr><th style="width:60px;">S.No</th><th>Specification</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>9.1</td><td>Phase sequence corrector (phase reversal and automatic phase change)</td></tr>
+          <tr><td>9.2</td><td>Auto door open and close button in car</td></tr>
+          <tr><td>9.3</td><td>Adjustable door open time</td></tr>
+          <tr><td>9.4</td><td>Door closing retries</td></tr>
+          <tr><td>9.5</td><td>Auto Attendant Function inside Lift Car</td></tr>
+          <tr><td>9.6</td><td>Home Landing</td></tr>
+          <tr><td>9.7</td><td>Auto Off Fan and Light</td></tr>
+          <tr><td>9.8</td><td>Full Length Sensor - 154 X Cross Beams</td></tr>
+          <tr><td>9.9</td><td>Inbuilt Counter Weight Screen</td></tr>
+          <tr><td>9.10</td><td>Over Travel Protection Switch-Limit Switches</td></tr>
+          <tr><td>9.11</td><td>Fault History Display</td></tr>
+          <tr><td>9.12</td><td>Manual Rescue Operation</td></tr>
+          <tr><td>9.13</td><td>Over Current Safety Protection</td></tr>
+          <tr><td>9.14</td><td>Bypass Load Function</td></tr>
+          <tr><td>9.15</td><td>Levelling accuracy - High level accuracy ±5mm tolerance</td></tr>
+          <tr><td>9.16</td><td>Ride Comfort - Smooth &amp; Jerk-Free Stopping</td></tr>
+          <tr><td>9.17</td><td>Door Nudging</td></tr>
+          <tr><td>9.18</td><td>Brake Supervision in Every Operation</td></tr>
+          <tr><td>9.19</td><td>Emergency Light in Car Cabin</td></tr>
+          <tr><td>9.20</td><td>Voltage Fluctuation withstanding Capacity (+10% to -10%)</td></tr>
+          <tr><td>9.21</td><td>2 Hours Fire Rated Doors</td></tr>
+          <tr><td>9.22</td><td>Arrow Display While Display Operation</td></tr>
+          <tr><td>9.23</td><td>Skirting Material in Car</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Contact / Addresses -->
+    <div class="block subtle">
+      <div class="cols">
+        <div>
+          <h2 class="small" style="margin-bottom:6px;">Contact Person Details</h2>
+          <div class="kv small">
+            <div class="key">Customer Name</div><div class="val">{{CONTACT_NAME}}</div>
+            <div class="key">Date</div><div class="val">{{OFFER_DATE}}</div>
+            <div class="key">Address</div><div class="val">{{ADDRESS_LINE1}}</div>
+            <div class="key">Mobile No</div><div class="val">{{CONTACT_PHONE}}</div>
+            <div class="key">Email</div><div class="val">{{CONTACT_EMAIL}}</div>
+            <div class="key">GSTIN</div><div class="val">{{GSTIN}}</div>
+            <div class="key">Valid Till</div><div class="val">{{VALID_TILL}}</div>
+          </div>
+        </div>
+        <div>
+          <h2 class="small" style="margin-bottom:6px;">Company Address</h2>
+          <div class="address small">{{COMPANY_ADDRESS_BLOCK}}</div>
+        </div>
+      </div>
+      <div style="height:10px"></div>
+      <div class="cols">
+        <div>
+          <h2 class="small" style="margin-bottom:6px;">Site Address</h2>
+          <div class="address small">{{SITE_ADDRESS_BLOCK}}</div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Item & Pricing -->
+    <div class="block">
+      <h2>Lift Details</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40px;">Sr</th>
+            <th>Description</th>
+            <th class="center" style="width:90px;">Quantity</th>
+            <th class="num" style="width:130px;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>
+              <strong>{{PRODUCT_CODE}}</strong><br/>
+              {{LINE_ITEM_DESC}}
+            </td>
+            <td class="center">{{QTY_NOS}}</td>
+            <td class="num">{{LINE_ITEM_AMOUNT}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Taxes and Totals -->
+    <div class="totals">
+      <div></div>
+      <div class="card">
+        <div class="row"><div>HSN/SAC</div><div>842810</div></div>
+        <div class="row"><div>Taxable Amount</div><div>{{TAXABLE_AMOUNT}}</div></div>
+        <div class="row"><div>CGST ({{CGST_RATE}})</div><div>{{CGST_AMOUNT}}</div></div>
+        <div class="row"><div>SGST ({{SGST_RATE}})</div><div>{{SGST_AMOUNT}}</div></div>
+        <div class="row"><div>Additional Discount Amount</div><div>{{DISCOUNT_AMOUNT}}</div></div>
+        <div class="row inwords"><div>In Words</div><div>{{AMOUNT_IN_WORDS}}</div></div>
+        <div class="row grand"><div>Grand Total</div><div>{{GRAND_TOTAL}}</div></div>
+      </div>
+    </div>
+
+    <!-- Footer note -->
+    <div class="footer">
+      <div class="muted">This HTML layout is designed for A4 print and on-screen viewing. Adjust values or add a logo if needed.</div>
+    </div>
+  </div>
+</body>
+</html>
